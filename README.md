@@ -1,1 +1,3 @@
 # FitnessApp
+
+pip install nltk
