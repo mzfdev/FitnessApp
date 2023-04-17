@@ -16,11 +16,11 @@ consejos = ['¿Quieres una rutina de fuerza o de cardio?', '¿Quieres una rutina
 ejercicios = ['¿Quieres una rutina de fuerza o de cardio?', '¿Quieres una rutina de principiantes o avanzada?', '¿Quieres una rutina de fuerza o de cardio?']
 rutina_fuerza = ['4 repeticiones de 10 series de sentadillas', '4 repeticiones de 10 series de press de banca', '4 repeticiones de 10 series de press militar', '4 repeticiones de 10 series de remo con barra', '4 repeticiones de 10 series de dominadas', '4 repeticiones de 10 series de press de hombros', '4 repeticiones de 10 series de press de triceps', '4 repeticiones de 10 series de press de biceps', '4 repeticiones de 10 series de press de piernas', '4 repeticiones de 10 series de press de gemelos']
 rutina_cardio = {'10 minutos de bicicleta estatica', '10 minutos de caminadora', '10 minutos de eliptica', '10 minutos de remo', '10 minutos de escaladora', '10 minutos de natacion', '10 minutos de saltar la cuerda', '10 minutos de correr', '10 minutos de patinar', '10 minutos de andar en bicicleta'}
-# rutinas = {
-#     'Principiantes': ['Entrenamiento de cuerpo completo para principiantes', 'Rutina de cardio para principiantes'],
-#     'Intermedios': ['Entrenamiento de fuerza para intermedios', 'Rutina de yoga para intermedios'],
-#     'Avanzados': ['Entrenamiento de alta intensidad para avanzados', 'Rutina de pilates para avanzados']
-# }
+rutinas = {
+    'Principiantes': ['Entrenamiento de cuerpo completo para principiantes', 'Rutina de cardio para principiantes'],
+    'Intermedios': ['Entrenamiento de fuerza para intermedios', 'Rutina de yoga para intermedios'],
+    'Avanzados': ['Entrenamiento de alta intensidad para avanzados', 'Rutina de pilates para avanzados']
+}
 
 def procesar_entrada(entrada):
     lematizador = WordNetLemmatizer()
@@ -33,6 +33,12 @@ def procesar_entrada(entrada):
         respuesta = random.choice(ayudas)
     elif 'rutina' in palabras_lematizadas:
         respuesta = random.choice(preguntas_rutinas)
+    elif 'principiante' in palabras_lematizadas:
+        respuesta = random.choice(rutinas.get('Principiantes'))
+    elif 'intermedio' in palabras_lematizadas:
+        respuesta = random.choice(rutinas.get('Intermedios'))
+    elif 'avanzado' in palabras_lematizadas:
+        respuesta = random.choice(rutinas.get('Avanzados'))
     elif 'dieta' in palabras_lematizadas:
         respuesta = random.choice(preguntas_dietas)
     elif 'adiós' in palabras_lematizadas or 'chao' in palabras_lematizadas:
