@@ -59,7 +59,7 @@ def procesar_entrada(entrada):
         respuesta = random.choice(preguntas_dietas)
     elif 'liviano' in palabras_lematizadas:
         respuesta = random.choice(retos.get('Livianos'))
-    elif 'normales' in palabras_lematizadas:
+    elif 'retos' in palabras_lematizadas and 'normales' in palabras_lematizadas:
         respuesta = random.choice(retos.get('Normales'))
     elif 'dificiles' in palabras_lematizadas:
         respuesta = random.choice(retos.get('Dificiles'))
