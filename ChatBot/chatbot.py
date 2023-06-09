@@ -5,6 +5,10 @@ from nltk.stem import WordNetLemmatizer
 nltk.download('punkt')
 nltk.download('wordnet')
 
+#Entradas
+palabras_clave_ayuda = ['ayuda', 'ayudarme', 'ayudame', 'ayudes','sugerencias', 'ayudar', 'consejo', 'aconsejar' 'necesito', 'necesitar', 'duda', 'asistencia', 'auxilio', 'colaboración', 'soporte', 'recomendación', 'orientación', 'asesoramiento', 'guía', 'dirección', 'apoyo', 'auxiliar', 'socorro', 'respaldo', 'alivio', 'favor', 'atención', 'intervención', 'solución', 'resolución', 'necesidad', 'necesitar', 'requerir', 'demanda', 'requerimiento', 'urgencia', 'deseo', 'búsqueda', 'consulta', 'pedir', 'solicitar', 'obtener', 'conseguir', 'alcanzar', 'obtener', 'lograr', 'encontrar', 'localizar', 'descubrir', 'identificar', 'obtener', 'brindar', 'proporcionar', 'suministrar', 'proveer', 'ofrecer', 'entregar', 'compartir', 'facilitar', 'aconsejar', 'orientar', 'dirigir', 'instruir', 'educar', 'informar', 'explicar', 'enseñar']
+palabras_clave_rutina = ['rutina', 'hábito', 'plan', 'programa', 'horario', 'organización', 'disciplina', 'rutinario', 'regularidad', 'diario', 'semanal', 'mensual', 'diariamente', 'semanalmente', 'mensualmente', 'automatizar', 'eficiencia', 'productividad', 'establecer', 'establecimiento', 'seguir', 'realizar', 'ejecutar', 'practicar', 'implementar', 'desarrollar', 'crear', 'mantener', 'administrar', 'gestionar', 'optimizar', 'mejorar', 'cambiar', 'adaptar', 'ajustar', 'modificar', 'controlar', 'repetir', 'seguimiento']
+
 saludos = ['Hola!', '¡Buen día!', '¡Hola!', '¡Hola, como estas?', '¡Hola, que tal?', '¡Hola, que tal te va?']
 preguntas_rutinas = ['¿Qué tipo de rutina buscas principiantes o avanzados?', '¿Quieres una rutina para principiantes o avanzados?', '¿Buscas una rutina de fuerza o de cardio?', '¿Qué tipo de rutina buscas fuerza o cardio?']
 preguntas_dietas = ['¿Qué tipo de dieta buscas?', '¿Quieres una dieta vegetariana o vegana?', '¿Buscas una dieta baja en grasas o en carbohidratos?']
@@ -43,11 +47,13 @@ def procesar_entrada(entrada):
     palabras = nltk.word_tokenize(entrada)
     palabras_lematizadas = [lematizador.lemmatize(palabra) for palabra in palabras]
     
-    if 'hola' in palabras_lematizadas:
-        respuesta = random.choice(saludos)
-    elif 'ayuda' in palabras_lematizadas:
+    if any(palabra in palabras_lematizadas for palabra in palabras_clave_ayuda):
         respuesta = random.choice(ayudas)
-    elif 'rutina' in palabras_lematizadas:
+    elif 'hola' in palabras_lematizadas:
+        respuesta = random.choice(saludos)
+    elif any(palabra.startswith('ayud') for palabra in palabras_lematizadas):
+        respuesta = random.choice(ayudas)
+    elif any(palabra in palabras_lematizadas for palabra in palabras_clave_rutina) or any(palabra.startswith('rutin') for palabra in palabras_lematizadas):
         respuesta = random.choice(preguntas_rutinas)
     elif 'principiante' in palabras_lematizadas:
         respuesta = random.choice(rutinas.get('Principiantes'))
@@ -69,16 +75,331 @@ def procesar_entrada(entrada):
         respuesta = random.choice(despedidas)
     elif 'nombre' in palabras_lematizadas:
         respuesta = random.choice(nombres)
-    elif 'llamar' in palabras_lematizadas:
+    elif any((palabra.startswith('llam') or palabra.startswith('nombr')) for palabra in palabras_lematizadas):
         respuesta = random.choice(nombres)
     elif 'recomendar' in palabras_lematizadas:
         respuesta = random.choice(sugerencias)
+    elif 'nutricion personal' or 'nutrición personal' in palabras_lematizadas:
+        print("Cuentame que has comido el dia de hoy")
+        comida = input('Tu: ')
+        recomendacion = calcular_grasas_totales(comida)
+        respuesta = recomendacion
     else:
-        respuesta = 'Lo siento, no entiendo lo que quieres decir.'
+        respuesta = 'Lo siento, no entiendo lo que quieres decir, si deseas una asesoria nutricional personalizada puedes escribir "nutricion personal"'
         
     return respuesta
 
+def calcular_grasas_totales(entrada):
+    alimentos = {
+    'hamburguesa': 20,
+    'hotdog': 15,
+    'ensalada': 5,
+    'papasfritas': 10,
+    'pizza': 12,
+    'pollofrito': 25,
+    'alitasdepollo': 18,
+    'sushi': 8,
+    'tacos': 15,
+    'chilesrellenos': 14,
+    'pastel': 30,
+    'helado': 10,
+    'donas': 8,
+    'chocolate': 15,
+    'chips': 12,
+    'pancakes': 10,
+    'cereal': 5,
+    'galletas': 7,
+    'lasaña': 22,
+    'polloalhorno': 8,
+    'queso': 10,
+    'churros': 15,
+    'papasalacarta': 9,
+    'pescado': 7,
+    'sopa': 6,
+    'sandwich': 8,
+    'empanadas': 15,
+    'burritos': 18,
+    'tortillaespañola': 20,
+    'salmón': 12,
+    'arrozfrito': 14,
+    'camarones': 10,
+    'nachos': 15,
+    'pasta': 10,
+    'costillasdecerdo': 30,
+    'cebiche': 5,
+    'polloasado': 7,
+    'ceviche': 6,
+    'tamales': 15,
+    'filetemignon': 20,
+    'lentejas': 2,
+    'guisantes': 2,
+    'champiñones': 0.5,
+    'sopaipillas': 12,
+    'quinoa': 6,
+    'ceviche': 6,
+    'sopaipillas': 12,
+    'gazpacho': 2,
+    'ensaladilla': 5,
+    'mariscos': 10,
+    'tortillafrancesa': 10,
+    'canelones': 15,
+    'revuelto': 8,
+    'carne': 10,
+    'fajitas': 15,
+    'mejillones': 6,
+    'lomo': 12,
+    'codillo': 30,
+    'chorizo': 15,
+    'pollo': 8,
+    'solomillo': 10,
+    'almejas': 7,
+    'embutidos': 20,
+    'morcilla': 15,
+    'jamón': 15,
+    'pulpo': 8,
+    'bacalao': 10,
+    'huevo': 5,
+    'pavo': 8,
+    'salchichón': 15,
+    'salchicha': 12,
+    'butifarra': 10,
+    'conejo': 8,
+    'cerdo': 20,
+    'pierna': 12,
+    'calamares': 10,
+    'sepia': 8,
+    'pulpo': 8,
+    'calamar': 8,
+    'espinacas': 2,
+    'berenjena': 1,
+    'tomate': 0.5,
+    'patatas': 1,
+    'zanahorias': 1,
+    'calabaza': 1,
+    'pepinos': 0.5,
+    'lechuga': 0.5,
+    'repollo': 0.5,
+    'espárragos': 1,
+    'pimiento': 0.5,
+    'remolacha': 0.5,
+    'puerro': 0.5,
+    'apio': 0.5,
+    'nabo': 0.5,
+    'coliflor': 0.5,
+    'perejil': 0.5,
+    'ajo': 0.5,
+    'cebolla': 0.5,
+    'limón': 0.5,
+    'naranja': 0.5,
+    'mandarina': 0.5,
+    'pera': 0.5,
+    'manzana': 0.5,
+    'plátano': 0.5,
+    'uvas': 0.5,
+    'fresas': 0.5,
+    'cerezas': 0.5,
+    'sandía': 0.5,
+    'melón': 0.5,
+    'piña': 0.5,
+    'kiwi': 0.5,
+    'melocotón': 0.5,
+    'albaricoque': 0.5,
+    'ciruela': 0.5,
+    'caqui': 0.5,
+    'mango': 0.5,
+    'frambuesas': 0.5,
+    'arándanos': 0.5,
+    'granada': 0.5,
+    'aceitunas': 10,
+    'aguacate': 20,
+    'aceite': 20,
+    'mantequilla': 15,
+    'mayonesa': 10,
+    'salsa': 8,
+    'ketchup': 5,
+    'mostaza': 2,
+    'azúcar': 0.5,
+    'sal': 0.5,
+    'harina': 0.5,
+    'arroz': 0.5,
+    'pan': 1,
+    'avena': 1,
+    'pasta': 2,
+    'queso': 5,
+    'yogur': 2,
+    'leche': 2,
+    'chocolate': 10,
+    'mermelada': 5,
+    'miel': 5,
+    'chicle': 0.5,
+    'helado': 10,
+    'galletas': 5,
+    'caramelos': 2,
+    'refresco': 5,
+    'café': 0.5,
+    'té': 0.5,
+    'cerveza': 5,
+    'vino': 1,
+    'whisky': 0.5,
+    'ron': 0.5,
+    'vodka': 0.5,
+    'tequila': 0.5,
+    'vermouth': 1,
+    'sidra': 2,
+    'brandy': 0.5,
+    'licor': 5,
+    'ginebra': 0.5,
+    'campari': 0.5,
+    'absenta': 0.5,
+    'champagne': 1,
+    'cava': 1,
+    'coñac': 0.5,
+    'pacharán': 0.5,
+    'mezcal': 0.5,
+    'orujos': 0.5,
+    'tekila': 0.5,
+    'aguardiente': 0.5,
+    'brandy': 0.5,
+    'limonada': 0.5,
+    'pisco': 0.5,
+    'ponche': 2,
+    'sangría': 5,
+    'anís': 0.5,
+    'polvorones': 5,
+    'tarta': 30,
+    'churros': 10,
+    'rosquillas': 10,
+    'flan': 10,
+    'natillas': 10,
+    'pastel': 30,
+    'bizcocho': 10,
+    'chocolate': 15,
+    'turrón': 10,
+    'mantecados': 5,
+    'goxua': 15,
+    'barquillo': 5,
+    'caramelos': 2,
+    'gominolas': 2,
+    'helado': 10,
+    'galletas': 5,
+    'chocolate': 10,
+    'caramelos': 2,
+    'pastelitos': 10,
+    'polvorones': 10,
+    'donuts': 8,
+    'magdalenas': 8,
+    'churros': 15,
+    'gofres': 10,
+    'rosquillas': 10,
+    'tarta': 30,
+    'brownie': 15,
+    'muffin': 10,
+    'cookies': 8,
+    'cupcake': 12,
+    'cheesecake': 20,
+    'chocolate': 15,
+    'tiramisú': 18,
+    'crema': 10,
+    'croissant': 8,
+    'cronut': 15,
+    'profiteroles': 12,
+    'buñuelos': 15,
+    'brazo': 12,
+    'sopa': 2,
+    'consomé': 2,
+    'puré': 5,
+    'crema': 5,
+    'sopa': 2,
+    'cocido': 20,
+    'garbanzos': 2,
+    'puchero': 18,
+    'cocido': 20,
+    'fabada': 18,
+    'paella': 12,
+    'arroz': 2,
+    'pisto': 5,
+    'guacamole': 10,
+    'paté': 15,
+    'foie': 20,
+    'salmorejo': 5,
+    'gazpacho': 5,
+    'hummus': 8,
+    'baba': 8,
+    'tapenade': 5,
+    'crema': 10,
+    'escalivada': 5,
+    'mermelada': 5,
+    'aceitunas': 2,
+    'salsa': 5,
+    'mostaza': 2,
+    'ketchup': 5,
+    'mayonesa': 5,
+    'tabasco': 2,
+    'aji': 2,
+    'salsa': 5,
+    'tahini': 8,
+    'salsa': 5,
+    'ají': 2,
+    'barbacoa': 15,
+    'parrilla': 15,
+    'asado': 15,
+    'frito': 10,
+    'cocido': 20,
+    'marinado': 8,
+    'horneado': 5,
+    'plancha': 5,
+    'gulash': 20,
+    'vapor': 2,
+    'a la': 0.5,
+    'tandoori': 8,
+    'tempura': 8,
+    'wok': 5,
+    'glaseado': 5,
+    'ahumado': 10,
+    'al': 0.5,
+    'en': 0.5,
+    'a': 0.5,
+    'de': 0.5,
+    'con': 0.5,
+    'sin': 0.5,
+    'y': 0.5,
+    'para': 0.5,
+    'sobre': 0.5,
+    'entre': 0.5,
+    'bajo': 0.5,
+    'a': 0.5,
+    'la': 0.5,
+    'las': 0.5,
+    'lo': 0.5,
+    'los': 0.5,
+    'un': 0.5,
+    'una': 0.5,
+    'uno': 0.5,
+    'unos': 0.5,
+    'unas': 0.5,
+}
+    
+    grasas_totales = 0
+    
+    # Limpiar y normalizar la entrada
+    entrada_procesada = entrada.lower().replace(" ", "")
+    
+    # Buscar palabras clave y sumar las grasas correspondientes
+    for alimento, grasa in alimentos.items():
+        if alimento in entrada_procesada:
+            grasas_totales += grasa
+    
+     # Realizar la validación y proporcionar una recomendación
+    if grasas_totales > 30:
+        recomendacion = "Estás consumiendo demasiada grasa. Deberías moderar tu ingesta."
+    elif grasas_totales < 10:
+        recomendacion = "Tu ingesta de grasas está un poco baja. Considera agregar alimentos más nutritivos."
+    else:
+        recomendacion = "Tu ingesta de grasas está dentro de un rango saludable. ¡Sigue así!"
+    
+    return recomendacion
+
 while True:
     entrada = input('Tú: ')
-    respuesta = procesar_entrada(entrada)
+    respuesta = procesar_entrada(entrada.lower())
     print('Chatbot:', respuesta)
