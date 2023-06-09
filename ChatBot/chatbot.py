@@ -21,6 +21,22 @@ rutinas = {
     'Intermedios': ['Calentamiento: 5-10 minutos de actividad cardiovascular como correr, saltar la cuerda o hacer bicicleta estática para elevar la frecuencia cardíaca y preparar los músculos para el ejercicio.', 'Levantamiento de pesas (3 series de 8-10 repeticiones): Puedes hacer ejercicios de levantamiento de pesas como press de banca, press de hombros, remo con mancuernas o curls de bíceps. Utiliza pesas que te desafíen pero que te permitan mantener una técnica adecuada.', 'Sentadillas con salto (3 series de 10-12 repeticiones): Párate con los pies separados a la altura de los hombros, realiza una sentadilla y luego salta explosivamente, aterrizando suavemente y repitiendo el movimiento.', 'Pull-ups o dominadas (3 series de 8-10 repeticiones): Si tienes una barra de dominadas disponible, puedes realizar este ejercicio para trabajar la parte superior del cuerpo, específicamente los músculos de la espalda y los brazos. Si no tienes una barra, puedes realizar variaciones de dominadas con bandas elásticas o con TRX.', 'Burpees (3 series de 10-12 repeticiones): Comienza en posición de cuclillas, luego coloca las manos en el suelo y salta con los pies hacia atrás para quedar en posición de plancha, realiza una flexión de brazos, salta con los pies hacia adelante y luego salta explosivamente con los brazos extendidos.', 'Russian twists (3 series de 15-20 repeticiones): Siéntate en el suelo con las piernas dobladas y los pies apoyados en el suelo, sostén una pesa con ambas manos y gira el torso de lado a lado, tocando la pesa en el suelo a cada lado.', 'Enfriamiento: 5-10 minutos de actividad cardiovascular de baja intensidad como caminar o estirar los músculos que trabajaste durante la rutina.'],
     'Avanzados': ['Calentamiento: 5-10 minutos de actividad cardiovascular como correr, saltar la cuerda o hacer bicicleta estática para elevar la frecuencia cardíaca y preparar los músculos para el ejercicio.', 'Levantamiento de pesas compuesto (4 series de 6-8 repeticiones): Puedes realizar ejercicios compuestos que involucren varios grupos musculares como sentadillas con barra, peso muerto, press de banca con barra, y dominadas con peso adicional. Utiliza cargas pesadas que te desafíen y asegúrate de utilizar una técnica adecuada.', 'Entrenamiento en circuito (3-4 rondas de 8-10 repeticiones): Puedes realizar un circuito que incluya ejercicios como burpees, saltos en caja, kettlebell swings, y remo con mancuernas, realizando cada ejercicio uno tras otro sin descanso, y descansando al final de cada ronda.', 'Ejercicios pliométricos (3 series de 8-10 repeticiones): Puedes realizar ejercicios pliométricos como saltos de caja, saltos de longitud, o saltos de altura para trabajar la explosividad y la fuerza de tus piernas.', 'Entrenamiento de core (3 series de 15-20 repeticiones): Puedes realizar ejercicios como rollouts de rueda abdominal, levantamiento de piernas en suspensión, o planchas con variaciones avanzadas para fortalecer los músculos del core.', 'Entrenamiento de alta intensidad (HIIT) (2-3 rondas de 30-45 segundos de trabajo con 15-30 segundos de descanso): Puedes realizar ejercicios de alta intensidad como sprints en intervalos, saltos de tijera, o box jumps para mejorar tu resistencia cardiovascular y quemar calorías.', 'Enfriamiento: 5-10 minutos de actividad cardiovascular de baja intensidad como caminar o estirar los músculos que trabajaste durante la rutina.']
 }
+periodos_de_ejercicio = {
+    'Principiantes': '3-4 veces por semana',
+    'Intermedios': '4-5 veces por semana',
+    'Avanzados': '5-6 veces por semana'
+}
+
+retos = {
+    'Livianos': ['Realizar 30 minutos de actividad cardiovascular 3 veces por semana.', 'Realizar 3 series de 10 repeticiones de sentadillas, flexiones de brazos y abdominales 3 veces por semana.', 'Realizar 3 series de 10 repeticiones de sentadillas, flexiones de brazos y abdominales 3 veces por semana.'],
+    'Normales': ['Realizar 30 minutos de actividad cardiovascular 4 veces por semana.', 'Realizar 3 series de 10 repeticiones de sentadillas, flexiones de brazos y abdominales 4 veces por semana.', 'Realizar 3 series de 10 repeticiones de sentadillas, flexiones de brazos y abdominales 4 veces por semana.'],
+    'Dificiles': ['Realizar 30 minutos de actividad cardiovascular 5 veces por semana.', 'Realizar 3 series de 10 repeticiones de sentadillas, flexiones de brazos y abdominales 5 veces por semana.', 'Realizar 3 series de 10 repeticiones de sentadillas, flexiones de brazos y abdominales 5 veces por semana.'],
+    'Extremos': ['Realizar 30 minutos de actividad cardiovascular 6 veces por semana.', 'Realizar 3 series de 10 repeticiones de sentadillas, flexiones de brazos y abdominales 6 veces por semana.', 'Realizar 3 series de 10 repeticiones de sentadillas, flexiones de brazos y abdominales 6 veces por semana.']
+}
+
+# momentos_de_ejercicio = {
+#     'Morning': ['Si haces ejercicio por la mañana, levántate lo suficientemente temprano para terminar el desayuno al menos una hora antes de tu entrenamiento.', '']
+# }
 
 def procesar_entrada(entrada):
     lematizador = WordNetLemmatizer()
@@ -41,6 +57,14 @@ def procesar_entrada(entrada):
         respuesta = random.choice(rutinas.get('Avanzados'))
     elif 'dieta' in palabras_lematizadas:
         respuesta = random.choice(preguntas_dietas)
+    elif 'liviano' in palabras_lematizadas:
+        respuesta = random.choice(retos.get('Livianos'))
+    elif 'retos' in palabras_lematizadas and 'normales' in palabras_lematizadas:
+        respuesta = random.choice(retos.get('Normales'))
+    elif 'dificiles' in palabras_lematizadas:
+        respuesta = random.choice(retos.get('Dificiles'))
+    elif 'extremos' in palabras_lematizadas:
+        respuesta = random.choice(retos.get('Extremos'))
     elif 'adiós' in palabras_lematizadas or 'chao' in palabras_lematizadas:
         respuesta = random.choice(despedidas)
     elif 'nombre' in palabras_lematizadas:
