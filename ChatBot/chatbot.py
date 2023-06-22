@@ -18,7 +18,7 @@ db_connection = os.environ.get('DB_CONNECTION')
 
 app.config['SECRET_KEY'] = secret_key
 
-client = MongoClient('mongodb+srv://user_chat:Ypf9RXOPhIzcvGWp@chatcluster.oizujjm.mongodb.net/dbchat')
+client = MongoClient(db_connection)
 db = client.dbchat
 
 #Entradas
