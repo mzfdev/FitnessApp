@@ -16,7 +16,7 @@ load_dotenv()
 secret_key = os.environ.get('SECRET_KEY')
 db_connection = os.environ.get('DB_CONNECTION')
 
-app.config['SECRET_KEY'] = 'S3CretK1yKeiko1357924680'
+app.config['SECRET_KEY'] = secret_key
 
 client = MongoClient('mongodb+srv://user_chat:Ypf9RXOPhIzcvGWp@chatcluster.oizujjm.mongodb.net/dbchat')
 db = client.dbchat
