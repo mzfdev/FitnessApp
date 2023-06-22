@@ -1,9 +1,17 @@
 import nltk
 import random
+from flask import Flask, request, jsonify
+from pymongo import MongoClient
 from nltk.stem import WordNetLemmatizer
 
 nltk.download('punkt')
 nltk.download('wordnet')
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'S3CretK1yKeiko1357924680'
+
+client = MongoClient('mongodb+srv://user_chat:Ypf9RXOPhIzcvGWp@chatcluster.oizujjm.mongodb.net/dbchat')
+db = client.dbchat
 
 #Entradas
 palabras_clave_ayuda = ['ayuda', 'ayudarme', 'ayudame', 'ayudes','sugerencias', 'ayudar', 'consejo', 'aconsejar' 'necesito', 'necesitar', 'duda', 'asistencia', 'auxilio', 'colaboración', 'soporte', 'recomendación', 'orientación', 'asesoramiento', 'guía', 'dirección', 'apoyo', 'auxiliar', 'socorro', 'respaldo', 'alivio', 'favor', 'atención', 'intervención', 'solución', 'resolución', 'necesidad', 'necesitar', 'requerir', 'demanda', 'requerimiento', 'urgencia', 'deseo', 'búsqueda', 'consulta', 'pedir', 'solicitar', 'obtener', 'conseguir', 'alcanzar', 'obtener', 'lograr', 'encontrar', 'localizar', 'descubrir', 'identificar', 'obtener', 'brindar', 'proporcionar', 'suministrar', 'proveer', 'ofrecer', 'entregar', 'compartir', 'facilitar', 'aconsejar', 'orientar', 'dirigir', 'instruir', 'educar', 'informar', 'explicar', 'enseñar']
@@ -399,7 +407,21 @@ def calcular_grasas_totales(entrada):
     
     return recomendacion
 
-while True:
-    entrada = input('Tú: ')
+@app.route('/chatbot', methods=['POST'])
+def chatbot_post():
+    entrada = request.json['entrada']
     respuesta = procesar_entrada(entrada.lower())
-    print('Chatbot:', respuesta)
+    guardar_conversacion(entrada, respuesta)
+    return jsonify({'respuesta': respuesta})
+
+@app.route('/chatbot', methods=['GET'])
+def chatbot_get():
+    conversaciones = db.conversaciones.find()
+    conversaciones = [{'entrada': c['entrada'], 'respuesta': c['respuesta']} for c in conversaciones]
+    return jsonify(conversaciones)
+
+def guardar_conversacion(entrada, respuesta):
+    db.conversaciones.insert_one({'entrada': entrada, 'respuesta': respuesta})
+
+if __name__ == '__main__':
+    app.run(port=8080)
