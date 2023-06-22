@@ -2,12 +2,20 @@ import nltk
 import random
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
+import os
+from dotenv import load_dotenv
 from nltk.stem import WordNetLemmatizer
 
 nltk.download('punkt')
 nltk.download('wordnet')
 
 app = Flask(__name__)
+
+load_dotenv()
+
+secret_key = os.environ.get('SECRET_KEY')
+db_connection = os.environ.get('DB_CONNECTION')
+
 app.config['SECRET_KEY'] = 'S3CretK1yKeiko1357924680'
 
 client = MongoClient('mongodb+srv://user_chat:Ypf9RXOPhIzcvGWp@chatcluster.oizujjm.mongodb.net/dbchat')
