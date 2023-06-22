@@ -13,7 +13,6 @@ app = Flask(__name__)
 
 load_dotenv()
 
-#conexiones
 secret_key = os.environ.get('SECRET_KEY')
 db_connection = os.environ.get('DB_CONNECTION')
 
