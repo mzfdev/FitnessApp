@@ -1,10 +1,19 @@
-# FitnessApp
+# Fitbot Chat Backend
+## Instación
+Este Bot está hecho en [Python](https://www.python.org/).
 
-pip install nltk
+Antes de utilizarlo, [Descarga e instala Python](https://www.python.org/downloads/).
 
-## API REST
+1. Clona el repositorio mediante el comando 
+`git clone https://github.com/mzfdev/FitnessApp.git `
 
-pip install Django
-pip install psycopg2-binary
+2. Instala las siguientes dependencias necesarias : 
+**Flask** `pip install flask`
+**Pymongo** `pip install pymongo`
+**NLTK** `pip install nltk`
+**Dotenv** `pip install dotenv`
 
-python manage.py runserver
+4. Inicia el servidor local con el comando: `python.exe chatbot.py`
+
+## Licencia
+[MIT](https://github.com/hersonreyes/Backend-ACA/blob/main/LICENSE)
