@@ -13,8 +13,7 @@ Antes de utilizarlo, [Descarga e instala Python](https://www.python.org/download
 - **NLTK** `pip install nltk`
 - **Dotenv** `pip install dotenv`
 
-3. Inicia el servidor local con el comando: `python.exe chatbot.py`
+4. Inicia el servidor local con el comando: `python.exe chatbot.py`
 
 ## Licencia
-[MIT](https://github.com/hersonreyes/Backend-ACA/blob/main/LICENSE)
- 
+[MIT](https://github.com/mzfdev/FitnessApp/blob/main/LICENSE)
