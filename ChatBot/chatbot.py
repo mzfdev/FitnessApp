@@ -1,5 +1,6 @@
 import nltk
 import random
+import jwt
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 import os
@@ -462,17 +463,7 @@ def calcular_grasas_totales(entrada):
 def chatbot_post():
     entrada = request.json['entrada']
     respuesta = procesar_entrada(entrada.lower())
-    guardar_conversacion(entrada, respuesta)
     return jsonify({'respuesta': respuesta})
 
-@app.route('/chatbot', methods=['GET'])
-def chatbot_get():
-    conversaciones = db.conversaciones.find()
-    conversaciones = [{'entrada': c['entrada'], 'respuesta': c['respuesta']} for c in conversaciones]
-    return jsonify(conversaciones)
-
-def guardar_conversacion(entrada, respuesta):
-    db.conversaciones.insert_one({'entrada': entrada, 'respuesta': respuesta})
-
 if __name__ == '__main__':
-    app.run(port=8080)
+    app.run(port=8085)
