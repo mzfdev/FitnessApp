@@ -1,4 +1,4 @@
-# Fitbot Chat Backend
+# Bot Backend
 ## Instación
 Este Bot está hecho en [Python](https://www.python.org/).
 
