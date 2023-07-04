@@ -1,15 +1,18 @@
 import nltk
 import random
+import jwt
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 from nltk.stem import WordNetLemmatizer
+from flask_cors import CORS
 
 nltk.download('punkt')
 nltk.download('wordnet')
 
 app = Flask(__name__)
+CORS(app) 
 
 load_dotenv()
 
@@ -23,9 +26,35 @@ db = client.dbchat
 
 #Entradas
 palabras_clave_ayuda = ['ayuda', 'ayudarme', 'ayudame', 'ayudes','sugerencias', 'ayudar', 'consejo', 'aconsejar' 'necesito', 'necesitar', 'duda', 'asistencia', 'auxilio', 'colaboración', 'soporte', 'recomendación', 'orientación', 'asesoramiento', 'guía', 'dirección', 'apoyo', 'auxiliar', 'socorro', 'respaldo', 'alivio', 'favor', 'atención', 'intervención', 'solución', 'resolución', 'necesidad', 'necesitar', 'requerir', 'demanda', 'requerimiento', 'urgencia', 'deseo', 'búsqueda', 'consulta', 'pedir', 'solicitar', 'obtener', 'conseguir', 'alcanzar', 'obtener', 'lograr', 'encontrar', 'localizar', 'descubrir', 'identificar', 'obtener', 'brindar', 'proporcionar', 'suministrar', 'proveer', 'ofrecer', 'entregar', 'compartir', 'facilitar', 'aconsejar', 'orientar', 'dirigir', 'instruir', 'educar', 'informar', 'explicar', 'enseñar']
-palabras_clave_rutina = ['rutina', 'hábito', 'plan', 'programa', 'horario', 'organización', 'disciplina', 'rutinario', 'regularidad', 'diario', 'semanal', 'mensual', 'diariamente', 'semanalmente', 'mensualmente', 'automatizar', 'eficiencia', 'productividad', 'establecer', 'establecimiento', 'seguir', 'realizar', 'ejecutar', 'practicar', 'implementar', 'desarrollar', 'crear', 'mantener', 'administrar', 'gestionar', 'optimizar', 'mejorar', 'cambiar', 'adaptar', 'ajustar', 'modificar', 'controlar', 'repetir', 'seguimiento']
+palabras_clave_rutina = ['rutina', 'ejercicio', 'ejercicios', 'ejercitar','rutinas', 'hábito', 'habitos', 'plan', 'programa', 'horario', 'organización', 'disciplina', 'rutinario', 'regularidad', 'diario', 'semanal', 'mensual', 'diariamente', 'semanalmente', 'mensualmente', 'automatizar', 'eficiencia', 'productividad', 'establecer', 'establecimiento', 'seguir', 'realizar', 'ejecutar', 'practicar', 'implementar', 'desarrollar', 'crear', 'mantener', 'administrar', 'gestionar', 'optimizar', 'mejorar', 'cambiar', 'adaptar', 'ajustar', 'modificar', 'controlar', 'repetir', 'seguimiento']
+palabras_clave_principiantes = ['rutina para principiante', 'principiante', 'principiantes','para principiante', 'rutinas para principiantes','para principiantes','principiantes',  'programa para principiante', 'programas para principiantes', 'hábito para principiante', 'hábitos para principiantes', 'plan principiante', 'planes principiantes', 'ejercicio para principiante', 'ejercicios para principiante', 'ejercicios para principiantes', 'entrenamiento para principiante', 'entrenamientos para principiante','entrenamientos para principiantes', 'entrenamiento para principiantes']
+palabras_clave_intermedios = ['rutina para intermedio', 'intermedio', 'intermedia', 'intermedias', 'intermedios','para intermedio', 'rutinas para intermedios', 'para intermedios', 'intermedios', 'programa para intermedio', 'programas para intermedios', 'hábito para intermedio', 'hábitos para intermedios', 'plan intermedio', 'planes intermedios', 'ejercicio para intermedio', 'ejercicios para intermedio', 'ejercicios para intermedios', 'entrenamiento para intermedio', 'entrenamientos para intermedio', 'entrenamientos para intermedios', 'entrenamiento para intermedios']
+palabras_clave_avanzados = ['rutina para avanzado', 'avanzada', 'avanzadas', 'avanzado', 'avanzados','para avanzado', 'rutinas para avanzados', 'para avanzados', 'avanzados', 'programa para avanzado', 'programas para avanzados', 'hábito para avanzado', 'hábitos para avanzados', 'plan avanzado', 'planes avanzados', 'ejercicio para avanzado', 'ejercicios para avanzado', 'ejercicios para avanzados', 'entrenamiento para avanzado', 'entrenamientos para avanzado', 'entrenamientos para avanzados', 'entrenamiento para avanzados']
+palabras_clave_fuerza = [
+    'fuerza', 'entrenamiento de fuerza', 'ejercicios de fuerza', 'rutina de fuerza', 'programa de fuerza',
+    'entrenamientos de fuerza', 'ejercicios para ganar fuerza', 'rutinas para ganar fuerza', 'programas para ganar fuerza',
+    'entrenamiento de fuerza muscular', 'ejercicios de fortalecimiento', 'rutina de fortalecimiento', 'programa de fortalecimiento',
+    'entrenamientos de resistencia', 'ejercicios para la fuerza', 'rutinas para la fuerza', 'programas para la fuerza',
+    'desarrollo de fuerza', 'aumentar fuerza', 'entrenamiento de fuerza y resistencia', 'rutina de fuerza y resistencia',
+    'programa de fuerza y resistencia', 'ejercicios de potencia', 'rutinas de levantamiento de pesas',
+    'programas de levantamiento de pesas', 'ejercicios con pesas', 'rutinas con pesas', 'programas con pesas',
+    'entrenamiento de fuerza en casa', 'ejercicios de fuerza en casa', 'rutina de fuerza en casa', 'programa de fuerza en casa',
+]
+palabras_clave_cardio = [
+    'cardio', 'entrenamiento cardiovascular', 'ejercicios cardiovasculares', 'rutina de cardio', 'programa de cardio',
+    'entrenamientos de cardio', 'ejercicios para quemar grasa', 'rutinas para quemar grasa', 'programas para quemar grasa',
+    'entrenamiento de resistencia cardiovascular', 'ejercicios de alta intensidad', 'rutina de alta intensidad',
+    'programa de alta intensidad', 'entrenamientos de intervalos', 'ejercicios de intervalos', 'rutinas de intervalos',
+    'programas de intervalos', 'entrenamiento aeróbico', 'ejercicios aeróbicos', 'rutina aeróbica', 'programa aeróbico'
+]
+palabras_clave_otros = ['otras', 'otros', 'que otras', 'alternativas', 'tipo', 'opciones',
+                         'mas', 'cosas', 'sobre que', 'que tipo de ayuda', 'con que mas', 
+                         'como', 'sabes', 'que mas', 'como me puedes ayudar?','de que manera', 
+                         'que mas', 'dime mas', 'dame mas', 'que otras cosas', 'que sabes','que puedes hacer', 
+                         'que haces','que sabes hacer']
 
-saludos = ['Hola!', '¡Buen día!', '¡Hola!', '¡Hola, como estas?', '¡Hola, que tal?', '¡Hola, que tal te va?']
+
+saludos = ['Hola! como te ayudo?', '¡Buen día! dime que necesitas', '¡Hola! estoy aqui']
 preguntas_rutinas = ['¿Qué tipo de rutina buscas principiantes o avanzados?', '¿Quieres una rutina para principiantes o avanzados?', '¿Buscas una rutina de fuerza o de cardio?', '¿Qué tipo de rutina buscas fuerza o cardio?']
 preguntas_dietas = ['¿Qué tipo de dieta buscas?', '¿Quieres una dieta vegetariana o vegana?', '¿Buscas una dieta baja en grasas o en carbohidratos?']
 despedidas = ['¡Hasta luego!', '¡Adiós!', '¡Que tengas un buen día!', '¡Hasta pronto!']
@@ -54,6 +83,17 @@ retos = {
     'Extremos': ['Realizar 30 minutos de actividad cardiovascular 6 veces por semana.', 'Realizar 3 series de 10 repeticiones de sentadillas, flexiones de brazos y abdominales 6 veces por semana.', 'Realizar 3 series de 10 repeticiones de sentadillas, flexiones de brazos y abdominales 6 veces por semana.']
 }
 
+otros = ['Puedo ayudarte con rutinas intermedias, retos livianos, normales, dificiles, hasta extremos, puedo darte rutinas de cardio o fuerza e incluso recomendarte dietas, si deseas una asesoria sobre lo que comes, aunque sigo en desarrollo ya poseo algo de conocimiento para que me digas que comes y darte algunos consejos, tu solo dime que necesitas', 'También puedo ofrecerte rutinas intermedias, desde retos livianos hasta extremos. Si buscas mejorar tu resistencia o ganar fuerza, puedo ayudarte con eso.',
+    'Si estás buscando desafíos, puedo proporcionarte rutinas de diferentes niveles: livianas, normales, difíciles e incluso extremas. Cuéntame qué tipo de entrenamiento te interesa.',
+    'Además de las rutinas de fuerza y cardio, también puedo brindarte recomendaciones dietéticas. Si deseas asesoramiento sobre tu alimentación, puedo darte consejos basados en mi conocimiento actual.',
+    '¿Necesitas una rutina de entrenamiento? Ya sea que estés buscando una rutina de fuerza o una rutina de cardio, puedo proporcionarte opciones adaptadas a tus necesidades y nivel de habilidad.',
+    'Si estás interesado en mejorar tu condición física, puedo ofrecerte rutinas de diferentes intensidades: desde principiante hasta avanzado. Además, puedo darte consejos sobre nutrición para complementar tus objetivos.',
+    'No solo puedo ayudarte con rutinas de ejercicios, sino que también puedo brindarte recomendaciones personalizadas en cuanto a tu alimentación. Cuéntame tus necesidades y preferencias, y estaré encantado de ayudarte.',
+    '¿Quieres llevar tu entrenamiento al siguiente nivel? Puedo ofrecerte rutinas desafiantes y efectivas, tanto para mejorar tu fuerza como para aumentar tu resistencia cardiovascular.',
+    'Si estás buscando rutinas de entrenamiento personalizadas, estás en el lugar correcto. Puedo adaptar las rutinas de cardio y fuerza a tus necesidades y metas específicas.',
+    'Además de las rutinas de ejercicios, puedo proporcionarte consejos prácticos sobre cómo llevar una alimentación saludable y equilibrada. Juntos, podemos trabajar en tu bienestar físico y nutricional.',
+]
+
 # momentos_de_ejercicio = {
 #     'Morning': ['Si haces ejercicio por la mañana, levántate lo suficientemente temprano para terminar el desayuno al menos una hora antes de tu entrenamiento.', '']
 # }
@@ -69,14 +109,18 @@ def procesar_entrada(entrada):
         respuesta = random.choice(saludos)
     elif any(palabra.startswith('ayud') for palabra in palabras_lematizadas):
         respuesta = random.choice(ayudas)
-    elif any(palabra in palabras_lematizadas for palabra in palabras_clave_rutina) or any(palabra.startswith('rutin') for palabra in palabras_lematizadas):
+    elif any(palabra in palabras_lematizadas for palabra in palabras_clave_rutina):
         respuesta = random.choice(preguntas_rutinas)
-    elif 'principiante' in palabras_lematizadas:
+    elif any(palabra in palabras_lematizadas for palabra in palabras_clave_principiantes):
         respuesta = random.choice(rutinas.get('Principiantes'))
-    elif 'intermedio' in palabras_lematizadas:
+    elif any(palabra in palabras_lematizadas for palabra in palabras_clave_intermedios):
         respuesta = random.choice(rutinas.get('Intermedios'))
-    elif 'avanzado' in palabras_lematizadas:
+    elif any(palabra in palabras_lematizadas for palabra in palabras_clave_avanzados):
         respuesta = random.choice(rutinas.get('Avanzados'))
+    elif any(palabra in palabras_lematizadas for palabra in palabras_clave_fuerza):
+        respuesta = random.choice(rutina_fuerza)
+    elif any(palabra in palabras_lematizadas for palabra in palabras_clave_cardio):
+        respuesta = random.choice(list(rutina_cardio))
     elif 'dieta' in palabras_lematizadas:
         respuesta = random.choice(preguntas_dietas)
     elif 'liviano' in palabras_lematizadas:
@@ -95,13 +139,15 @@ def procesar_entrada(entrada):
         respuesta = random.choice(nombres)
     elif 'recomendar' in palabras_lematizadas:
         respuesta = random.choice(sugerencias)
-    elif 'nutricion personal' or 'nutrición personal' in palabras_lematizadas:
+    elif any(palabra in palabras_lematizadas for palabra in palabras_clave_otros):
+        respuesta = random.choice(otros)    
+    elif ('nutricion personal' or 'nutrición personal') in palabras_lematizadas:
         print("Cuentame que has comido el dia de hoy")
         comida = input('Tu: ')
         recomendacion = calcular_grasas_totales(comida)
         respuesta = recomendacion
     else:
-        respuesta = 'Lo siento, no entiendo lo que quieres decir, si deseas una asesoria nutricional personalizada puedes escribir "nutricion personal"'
+        respuesta = 'Perdon :c estoy aprendiendo aun y no entiendo lo que quieres decir, prometo mejorar <3 pero si deseas tambien una asesoria nutricional personalizada puedes escribir "nutricion personal"'
         
     return respuesta
 
@@ -419,17 +465,7 @@ def calcular_grasas_totales(entrada):
 def chatbot_post():
     entrada = request.json['entrada']
     respuesta = procesar_entrada(entrada.lower())
-    guardar_conversacion(entrada, respuesta)
     return jsonify({'respuesta': respuesta})
 
-@app.route('/chatbot', methods=['GET'])
-def chatbot_get():
-    conversaciones = db.conversaciones.find()
-    conversaciones = [{'entrada': c['entrada'], 'respuesta': c['respuesta']} for c in conversaciones]
-    return jsonify(conversaciones)
-
-def guardar_conversacion(entrada, respuesta):
-    db.conversaciones.insert_one({'entrada': entrada, 'respuesta': respuesta})
-
 if __name__ == '__main__':
-    app.run(port=8080)
+    app.run(port=8085)
