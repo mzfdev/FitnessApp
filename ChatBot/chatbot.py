@@ -141,11 +141,6 @@ def procesar_entrada(entrada):
         respuesta = random.choice(sugerencias)
     elif any(palabra in palabras_lematizadas for palabra in palabras_clave_otros):
         respuesta = random.choice(otros)    
-    elif ('nutricion personal' or 'nutrición personal') in palabras_lematizadas:
-        print("Cuentame que has comido el dia de hoy")
-        comida = input('Tu: ')
-        recomendacion = calcular_grasas_totales(comida)
-        respuesta = recomendacion
     else:
         respuesta = 'Perdon :c estoy aprendiendo aun y no entiendo lo que quieres decir, prometo mejorar <3 pero si deseas tambien una asesoria nutricional personalizada puedes escribir "nutricion personal"'
         
