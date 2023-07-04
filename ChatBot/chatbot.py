@@ -463,4 +463,7 @@ def chatbot_post():
     return jsonify({'respuesta': respuesta})
 
 if __name__ == '__main__':
-    app.run(port=8085)
+    # Obtén el número de puerto desde una variable de entorno o usa un valor predeterminado
+    port = int(os.environ.get('PORT', 5000))
+    # Ejecuta la aplicación en el puerto especificado
+    app.run(host='0.0.0.0', port=port)
