@@ -6,11 +6,13 @@ from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 from nltk.stem import WordNetLemmatizer
+from flask_cors import CORS
 
 nltk.download('punkt')
 nltk.download('wordnet')
 
 app = Flask(__name__)
+CORS(app) 
 
 load_dotenv()
 
