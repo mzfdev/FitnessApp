@@ -12,6 +12,7 @@ Antes de utilizarlo, [Descarga e instala Python](https://www.python.org/download
 - **Pymongo** `pip install pymongo`
 - **NLTK** `pip install nltk`
 - **Dotenv** `pip install dotenv`
+- **CORS** `pip install flask_cors`
 
 4. Inicia el servidor local con el comando: `python.exe chatbot.py`
 
