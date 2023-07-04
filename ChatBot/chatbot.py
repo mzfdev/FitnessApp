@@ -1,10 +1,8 @@
 import nltk
 import random
-import jwt
 from flask import Flask, request, jsonify
 from pymongo import MongoClient
 import os
-from dotenv import load_dotenv
 from nltk.stem import WordNetLemmatizer
 from flask_cors import CORS
 
@@ -13,16 +11,6 @@ nltk.download('wordnet')
 
 app = Flask(__name__)
 CORS(app) 
-
-load_dotenv()
-
-secret_key = os.environ.get('SECRET_KEY')
-db_connection = os.environ.get('DB_CONNECTION')
-
-app.config['SECRET_KEY'] = secret_key
-
-client = MongoClient(db_connection)
-db = client.dbchat
 
 #Entradas
 palabras_clave_ayuda = ['ayuda', 'ayudarme', 'ayudame', 'ayudes','sugerencias', 'ayudar', 'consejo', 'aconsejar' 'necesito', 'necesitar', 'duda', 'asistencia', 'auxilio', 'colaboración', 'soporte', 'recomendación', 'orientación', 'asesoramiento', 'guía', 'dirección', 'apoyo', 'auxiliar', 'socorro', 'respaldo', 'alivio', 'favor', 'atención', 'intervención', 'solución', 'resolución', 'necesidad', 'necesitar', 'requerir', 'demanda', 'requerimiento', 'urgencia', 'deseo', 'búsqueda', 'consulta', 'pedir', 'solicitar', 'obtener', 'conseguir', 'alcanzar', 'obtener', 'lograr', 'encontrar', 'localizar', 'descubrir', 'identificar', 'obtener', 'brindar', 'proporcionar', 'suministrar', 'proveer', 'ofrecer', 'entregar', 'compartir', 'facilitar', 'aconsejar', 'orientar', 'dirigir', 'instruir', 'educar', 'informar', 'explicar', 'enseñar']
