@@ -452,6 +452,6 @@ def chatbot_post():
 
 if __name__ == '__main__':
     # Obtén el número de puerto desde una variable de entorno o usa un valor predeterminado
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 8085))
     # Ejecuta la aplicación en el puerto especificado
     app.run(host='0.0.0.0', port=port)
